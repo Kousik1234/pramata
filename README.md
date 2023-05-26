@@ -30,7 +30,7 @@
 - Admin can view message
 
 ## Documentations
-- API Documentation With Requests Body : [PostMan API Documentation](https://documenter.getpostman.com/view/23490531/2s93RTQrtF#0d812c86-e003-45e5-8075-3d736aecdeb6)
+- API Documentation With Requests Body : [PostMan API Documentation](https://documenter.getpostman.com/view/23537462/2s93m7VLfk)
 - Database Schema : [Notion Database Schema Documentation](https://www.notion.so/ER-diagram-Tables-Teamiply-32964fe15582483e90816ac319ee04f7)
 ## Installation
 ```
