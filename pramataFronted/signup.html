@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Message Channel App</title>
+  <style>
+   #channels {
+      margin-bottom: 20px;
+    }
+
+    #messages {
+      margin-bottom: 20px;
+    }
+
+    .message {
+      margin-bottom: 10px;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Message Channel App</h1>
+
+  <div id="loginContainer">
+    <h2>Login</h2>
+    <input type="email" id="emailInput" placeholder="Email">
+    <input type="password" id="passwordInput" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="loginError" style="color: red;"></p>
+    <hr>
+    <h2>Signup</h2>
+    <input type="email" id="signupEmailInput" placeholder="Email">
+    <input type="password" id="signupPasswordInput" placeholder="Password">
+    <button onclick="signup()">Signup</button>
+    <p id="signupError" style="color: red;"></p>
+  </div>
+
+  <div id="appContainer" style="display: none;">
+    <h2>Channels</h2>
+    <div id="channels">
+      <input type="text" id="channelName" placeholder="Channel name">
+      <button onclick="createChannel()">Create Channel</button>
+      <ul id="channelList"></ul>
+    </div>
+
+    <h2>Messages</h2>
+    <div id="messages">
+      <select id="channelSelect" onchange="getChannelMessages()">
+        <option value="">Select a channel</option>
+      </select>
+      <input type="text" id="messageInput" placeholder="Enter your message">
+      <button onclick="sendMessage()">Send Message</button>
+      <ul id="messageList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const apiUrl = 'http://localhost:8080/api/v1'; // Replace with your Spring Boot API URL
+    let token = null;
+
+    function showErrorMessage(elementId, message) {
+      const errorElement = document.getElementById(elementId);
+      errorElement.innerText = message;
+    }
+
+    function showAppContainer() {
+      document.getElementById('loginContainer').style.display = 'none';
+      document.getElementById('appContainer').style.display = 'block';
+    }
+
+    function login() {
+      const email = document.getElementById('emailInput').value;
+      const password = document.getElementById('passwordInput').value;
+
+      fetch(`${apiUrl}/login/user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            showErrorMessage('loginError', data.error);
+          } else {
+            token = data.token;
+            showAppContainer();
+            fetchChannels();
+          }
+        })
+        .catch(error => console.error('Error during login:', error));
+    }
+
+    function signup() {
+      const email = document.getElementById('signupEmailInput').value;
+      const password = document.getElementById('signupPasswordInput').value;
+
+      fetch(`${apiUrl}/signup/user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            showErrorMessage('signupError', data.error);
+          } else {
+            showErrorMessage('signupError', 'Signup successful. Please log in.');
+          }
+        })
+        .catch(error => console.error('Error during signup:', error));
+    }
+
+    function fetchChannels() {
+      // ... Code for fetching channels and populating the channel list
+      fetch(`${apiUrl}/getAllChannels/user`)
+        .then(response => response.json())
+        .then(channels => {
+          const channelList = document.getElementById('channelList');
+          channelList.innerHTML = '';
+
+          channels.forEach(channel => {
+            const option = document.createElement('option');
+            option.value = channel.id;
+            option.innerText = channel.name;
+            channelList.appendChild(option);
+          });
+        })
+        .catch(error => console.error('Error fetching channels:', error));
+    }
+
+    function createChannel() {
+      // ... Code for creating a new channel
+      const channelName = document.getElementById('channelName').value;
+      if (channelName) {
+        fetch(`${apiUrl}/channel/create`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name: channelName })
+        })
+          .then(response => response.json())
+          .then(() => {
+            document.getElementById('channelName').value = '';
+            fetchChannels();
+          })
+          .catch(error => console.error('Error creating channel:', error));
+      }
+    }
+
+    function getChannelMessages() {
+      // ... Code for fetching messages for the selected channel and populating the message list
+      const channelId = document.getElementById('channelSelect').value;
+      if (channelId) {
+        fetch(`${apiUrl}/${channelId}/messages`)
+          .then(response => response.json())
+          .then(messages => {
+            const messageList = document.getElementById('messageList');
+            messageList.innerHTML = '';
+
+            messages.forEach(message => {
+              const listItem = document.createElement('li');
+              listItem.className = 'message';
+              listItem.innerText = message.content;
+              messageList.appendChild(listItem);
+            });
+          })
+          .catch(error => console.error('Error fetching messages:', error));
+      }
+    }
+
+    function sendMessage() {
+      // ... Code for sending a message to the selected channel
+      const channelId = document.getElementById('channelSelect').value;
+      const messageContent = document.getElementById('messageInput').value;
+      if (channelId && messageContent) {
+        fetch(`${apiUrl}/channels/${channelId}/messages`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ content: messageContent })
+        })
+          .then(response => response.json())
+          .then(() => {
+            document.getElementById('messageInput').value = '';
+            getChannelMessages();
+          })
+          .catch(error => console.error('Error sending message:', error));
+      }
+    }
+
+  </script>
+</body>
+</html>
