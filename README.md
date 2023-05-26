@@ -30,7 +30,7 @@
 - Admin can view message
 
 ## Documentations
-- API Documentation With Requests Body : [PostMan API Documentation](https://documenter.getpostman.com/view/23537462/2s93m7VLfk)
+- API Documentation With Requests Body : [PostMan API Documentation](https://documenter.getpostman.com/view/23537462/2s93m7VLpZ)
 - Database Schema : [Google_Docs Database Schema Documentation](https://docs.google.com/document/d/1dYRjENGdjheEpShDbdIPLc9ntan47uZGq2dh2MBmvb0/edit?usp=sharing)
 ## Installation
 ```
