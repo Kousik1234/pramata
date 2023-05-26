@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false)
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "channel_id", nullable = false)
+    @JoinColumn(name = "channels_id", nullable = false)
     private Channel channel;
 
 }

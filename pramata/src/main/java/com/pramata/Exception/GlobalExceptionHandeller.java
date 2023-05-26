@@ -26,6 +26,20 @@ public class GlobalExceptionHandeller {
     }
 
 
+    @ExceptionHandler(JwtAuthException.class)
+    public ResponseEntity<MyErorDetails> JwtAuthExceptionHandler(JwtAuthException ce, WebRequest req) {
+
+
+        MyErorDetails err = new MyErorDetails();
+        err.setTimeStamp(LocalDateTime.now());
+        err.setMessage(ce.getMessage());
+        err.setHttpStatus(HttpStatus.NOT_FOUND);
+        err.setDetails(req.getDescription(false));
+
+        return new ResponseEntity<MyErorDetails>(err, HttpStatus.NOT_FOUND);
+    }
+
+
 
     @ExceptionHandler(ChannelException.class)
     public ResponseEntity<MyErorDetails> teamExceptionHandler(ChannelException ce, WebRequest req) {

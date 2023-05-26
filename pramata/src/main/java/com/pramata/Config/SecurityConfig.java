@@ -2,6 +2,7 @@ package com.pramata.Config;
 
 
 
+import com.pramata.CustomMapper.ChannelToChannelDetailsDto;
 import com.pramata.Filter.JwtAuthFilter;
 import com.pramata.ServiceIMPL.UserServiceDetail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                // .requestMatchers("/api/v1/create/admin").hasRole(Roles.SUPERADMIN.name())
                 .requestMatchers("/api/v1/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -55,6 +55,12 @@ public class SecurityConfig {
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
+    }
+
+
+    @Bean
+    public ChannelToChannelDetailsDto ChannelToChannelDetailsDto() {
+        return new ChannelToChannelDetailsDto();
     }
 
     @Autowired
