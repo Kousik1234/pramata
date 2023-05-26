@@ -10,8 +10,10 @@ import com.pramata.Service.JwtService;
 import com.pramata.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import java.util.Optional;
+import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+@Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepo userRepo;
